@@ -268,13 +268,36 @@ public class FSBenchmark {
         // Initialize Hadoop configuration
         Configuration conf = new Configuration();
         if (fsConfPath != null && !fsConfPath.equals("DEFAULT")) {
-            conf.addResource(new Path(fsConfPath));
+            Path confPath = new Path(fsConfPath);
+            
+            // Verify the configuration file exists and is accessible
+            try {
+                // Create a temporary filesystem to check if the configuration file exists
+                FileSystem localFs = FileSystem.getLocal(new Configuration());
+                if (!localFs.exists(confPath)) {
+                    throw new IOException("Configuration file not found: " + fsConfPath);
+                }
+                
+                // Try to add the resource
+                conf.addResource(confPath);
+                System.out.println("Loaded configuration from: " + fsConfPath);
+            } catch (Exception e) {
+                System.err.println("ERROR: Failed to load configuration from " + fsConfPath + ": " + e.getMessage());
+                throw new IOException("Failed to load configuration file: " + fsConfPath, e);
+            }
         } else {
-            // // Use the local file system for default
+            // Use the local file system for default
             conf.set("fs.defaultFS", "file:///");
+            System.out.println("Using local filesystem (default)");
         }
-        System.out.println("Using configuration: " + fsConfPath);
-        fs = FileSystem.get(conf);
+        
+        try {
+            fs = FileSystem.get(conf);
+            System.out.println("Successfully initialized FileSystem: " + fs.getUri());
+        } catch (IOException e) {
+            System.err.println("ERROR: Failed to initialize filesystem: " + e.getMessage());
+            throw e;
+        }
     }
 
     private void createTestDirectories() throws IOException {

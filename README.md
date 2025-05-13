@@ -55,7 +55,7 @@ java -jar target/benchmarks.jar -p fsConfPath=/path/to/core-site.xml
 or put the jar file in the lib directory and run the following command:
 
 ```bash
-java -cp benchmarks.jar:lib/* -p fsConfPath=/path/to/core-site.xml org.openjdk.jmh.Main
+java -cp benchmarks.jar:lib/* org.openjdk.jmh.Main -p fsConfPath=/path/to/core-site.xml 
 ```
 
 ### Specifying a Custom Test Directory
@@ -70,6 +70,8 @@ You can combine this with other parameters:
 
 ```bash
 java -jar target/benchmarks.jar -p fsConfPath=/path/to/core-site.xml -p testBaseDirPath=/path/to/test/directory
+
+java -cp target/benchmarks.jar:lib/* org.openjdk.jmh.Main -p fsConfPath=/path/to/core-site.xml -p testBaseDirPath=/path/to/test/directory
 ```
 
 ### Running Specific Benchmarks
