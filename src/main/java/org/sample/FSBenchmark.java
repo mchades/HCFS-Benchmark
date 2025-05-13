@@ -56,6 +56,9 @@ public class FSBenchmark {
 
     @Param({"DEFAULT"})
     private String fsConfPath;
+    
+    @Param({"/tmp"})
+    private String testBaseDirPath; // Base directory for all test files and directories
 
     private FileSystem fs;
     private Path testDir;
@@ -275,8 +278,8 @@ public class FSBenchmark {
     }
 
     private void createTestDirectories() throws IOException {
-        // Create main test directory
-        testDir = new Path("/tmp/hadoop-fs-benchmark-" + System.currentTimeMillis());
+        // Create main test directory using the specified base directory
+        testDir = new Path(testBaseDirPath + "/hadoop-fs-benchmark-" + System.currentTimeMillis());
         fs.mkdirs(testDir);
 
         // Create subdirectories for specific tests

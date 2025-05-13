@@ -52,6 +52,25 @@ To test a specific filesystem (like HDFS), use the `fsConfPath` parameter:
 ```bash
 java -jar target/benchmarks.jar -p fsConfPath=/path/to/core-site.xml
 ```
+or put the jar file in the lib directory and run the following command:
+
+```bash
+java -cp benchmarks.jar:lib/* -p fsConfPath=/path/to/core-site.xml org.openjdk.jmh.Main
+```
+
+### Specifying a Custom Test Directory
+
+By default, the benchmark creates test files in `/tmp`. To use a custom directory:
+
+```bash
+java -jar target/benchmarks.jar -p testBaseDirPath=/path/to/test/directory
+```
+
+You can combine this with other parameters:
+
+```bash
+java -jar target/benchmarks.jar -p fsConfPath=/path/to/core-site.xml -p testBaseDirPath=/path/to/test/directory
+```
 
 ### Running Specific Benchmarks
 
@@ -83,7 +102,7 @@ After completion, JMH will output the average execution time (in milliseconds by
 1. Some filesystems may not support all operations. For instance, certain filesystems don't support append operations, and the benchmark will automatically skip these tests.
 2. For distributed filesystems like HDFS, ensure that the Hadoop environment is properly configured.
 3. Benchmark results may be affected by system load, disk I/O, network conditions, etc.
-4. The benchmark creates temporary directories in `/tmp`. Ensure you have sufficient permissions.
+4. The benchmark creates temporary directories in the specified test directory (defaults to `/tmp`). Ensure you have sufficient permissions.
 
 ## Example Output
 
@@ -98,3 +117,4 @@ FSBenchmark.testListStatus          DEFAULT  avgt        4.586          ms/op
 FSBenchmark.testMkdirs              DEFAULT  avgt        2.021          ms/op
 FSBenchmark.testRename              DEFAULT  avgt        0.302          ms/op
 ```
+`
